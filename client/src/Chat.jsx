@@ -13,9 +13,16 @@ function Chat({ user }) {
 
   useEffect(()=>{
 
-    socketRef.current = new WebSocket("ws://localhost:4000")
+    const WS_URL =
+      window.location.hostname === "localhost"
+        ? "ws://localhost:4000"
+        : "wss://chatapp-e6u4.onrender.com"
+
+    socketRef.current = new WebSocket(WS_URL)
 
     socketRef.current.onopen = ()=>{
+      console.log("Connected to websocket")
+
       socketRef.current.send(JSON.stringify({
         type:"join",
         userId:user
@@ -28,6 +35,10 @@ function Chat({ user }) {
       if(data.type === "message"){
         setMessages(prev=>[...prev,data])
       }
+    }
+
+    socketRef.current.onerror = (err)=>{
+      console.log("WebSocket error", err)
     }
 
     return ()=>{
@@ -66,8 +77,6 @@ function Chat({ user }) {
 
     <div className="chat-container">
 
-      {/* SIDEBAR */}
-
       <div className="sidebar">
 
         <h2>Chat App</h2>
@@ -85,16 +94,11 @@ function Chat({ user }) {
       </div>
 
 
-      {/* CHAT WINDOW */}
-
       <div className="chat-window">
 
         <div className="chat-header">
           Chat with {receiver}
         </div>
-
-
-        {/* MESSAGES */}
 
         <div className="messages">
 
@@ -131,8 +135,6 @@ function Chat({ user }) {
 
         </div>
 
-
-        {/* INPUT */}
 
         <div className="input-box">
 
