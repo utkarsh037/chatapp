@@ -17,7 +17,10 @@ connection();
 
 // Middlewares
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: [
+    "http://localhost:5173",
+    "https://chatapp-liard-gamma.vercel.app"
+  ],
   credentials: true
 }));
 
@@ -28,14 +31,14 @@ app.use(cookieParser());
 app.use("/api/user", userRoute);
 app.use("/api/messages", messageRoute);
 
-app.get("/", (req,res)=>{
-    res.send("Chat Server Running");
-})
+app.get("/", (req, res) => {
+  res.send("Chat Server Running");
+});
 
 const PORT = process.env.PORT || 4000;
 
-const server = app.listen(PORT, ()=>{
-    console.log("Server running on port",PORT);
+const server = app.listen(PORT, () => {
+  console.log("Server running on port", PORT);
 });
 
 setupWebSocket(server);
