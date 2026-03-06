@@ -1,20 +1,27 @@
 const mongoose = require("mongoose");
 
 const messageSchema = new mongoose.Schema({
-  sender:{
-    type:String,
-    required:true
+  sender: {
+    type: String,
+    required: true
   },
-  receiver:{
-    type:String,
-    required:true
+  senderName: {
+    type: String,
+    default: ""
   },
-  message:{
-    type:String,
-    required:true
+  receiver: {
+    type: String,
+    default: null   // ← no longer required
+  },
+  message: {
+    type: String,
+    required: true
+  },
+  type: {
+    type: String,
+    default: "global"  // "global" or "direct"
   }
-},{timestamps:true});
+}, { timestamps: true });
 
 const Message = mongoose.model("Message", messageSchema);
-
 module.exports = Message;

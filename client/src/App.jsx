@@ -1,36 +1,34 @@
-import { useState } from "react"
-import Chat from "./Chat"
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import { AuthProvider } from "./context/AuthContext"
+import ProtectedRoute from "./components/ProtectedRoute"
+import Login from "./pages/Login"
+import Register from "./pages/Register"
+import Chat from "./components/Chat"
 
 function App() {
-
-  const [inputUser, setInputUser] = useState("")
-  const [user, setUser] = useState("")
-
-  if (!user) {
-    return (
-      <div>
-
-        <h2>Enter Username</h2>
-
-        <input
-          placeholder="Enter user (user1 / user2)"
-          value={inputUser}
-          onChange={(e) => setInputUser(e.target.value)}
-        />
-
-        <button onClick={() => setUser(inputUser)}>
-          Join Chat
-        </button>
-
-      </div>
-    )
-  }
-
   return (
-    <div>
-      <h1>Realtime Chat</h1>
-      <Chat user={user}/>
-    </div>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* Public routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
+          {/* Protected route */}
+          <Route
+            path="/chat"
+            element={
+              <ProtectedRoute>
+                <Chat />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Default redirect */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   )
 }
 
